@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5939EF5D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolarLab.EBoard.Notifications.UnitTests", "SolarLab.EBoard.Notifications.UnitTests\SolarLab.EBoard.Notifications.UnitTests.csproj", "{72DC3E1E-1823-4EFF-8D77-77951E9F8E3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolarLab.EBoard.Notifications.Infrastructure", "SolarLab.EBoard.Notifications.Infrastructure\SolarLab.EBoard.Notifications.Infrastructure.csproj", "{BF7C4D23-625F-4F18-B54D-3633945BCB58}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,10 +30,15 @@ Global
 		{72DC3E1E-1823-4EFF-8D77-77951E9F8E3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72DC3E1E-1823-4EFF-8D77-77951E9F8E3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72DC3E1E-1823-4EFF-8D77-77951E9F8E3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF7C4D23-625F-4F18-B54D-3633945BCB58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF7C4D23-625F-4F18-B54D-3633945BCB58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF7C4D23-625F-4F18-B54D-3633945BCB58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF7C4D23-625F-4F18-B54D-3633945BCB58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2154BE4A-C709-48F3-8336-348596BDF6B1} = {7A845BAE-6B31-4659-8708-3EA8495F6053}
 		{7D95C956-C76C-4387-984D-F3E7C9A4D9C6} = {7A845BAE-6B31-4659-8708-3EA8495F6053}
 		{72DC3E1E-1823-4EFF-8D77-77951E9F8E3D} = {5939EF5D-C846-435A-B8B4-FB7ACE24C9E5}
+		{BF7C4D23-625F-4F18-B54D-3633945BCB58} = {7A845BAE-6B31-4659-8708-3EA8495F6053}
 	EndGlobalSection
 EndGlobal
