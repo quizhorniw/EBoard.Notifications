@@ -9,8 +9,9 @@ public sealed class Notification : Entity
     public List<EmailAddress> To { get; private set; }
     public string Subject { get; private set; }
     public string Content { get; private set; }
+    public bool IsHtml { get; private set; }
 
-    private Notification(List<EmailAddress> to, string subject, string content)
+    private Notification(List<EmailAddress> to, string subject, string content, bool isHtml = false)
     {
         if (to.Count == 0)
         {
@@ -31,8 +32,9 @@ public sealed class Notification : Entity
         To = to;
         Subject = subject;
         Content = content;
+        IsHtml = isHtml;
     }
 
-    public static Notification Create(List<EmailAddress> to, string subject, string content) => 
-        new(to, subject, content);
+    public static Notification Create(List<EmailAddress> to, string subject, string content, bool isHtml = false) => 
+        new(to, subject, content, isHtml);
 }
