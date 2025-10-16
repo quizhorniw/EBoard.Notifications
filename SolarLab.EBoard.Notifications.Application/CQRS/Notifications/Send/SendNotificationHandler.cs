@@ -20,7 +20,7 @@ public class SendNotificationHandler : IRequestHandler<SendNotificationCommand>
             .Select(to => new EmailAddress(to))
             .ToList();
         
-        var notification = Notification.Create(to, request.Subject, request.Content);
+        var notification = Notification.Create(to, request.Subject, request.Content, request.IsHtml);
         await _emailSender.SendAsync(notification, cancellationToken);
     }
 }

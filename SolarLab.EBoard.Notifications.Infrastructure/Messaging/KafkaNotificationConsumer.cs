@@ -1,9 +1,10 @@
-using System.Text.Json;
 using Confluent.Kafka;
 using MediatR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using SolarLab.EBoard.Notifications.Application.CQRS.Notifications.Send;
+using JsonException = System.Text.Json.JsonException;
 
 namespace SolarLab.EBoard.Notifications.Infrastructure.Messaging;
 
@@ -40,16 +41,23 @@ public class KafkaNotificationConsumer : BackgroundService
                     continue;
                 }
 
-                var command = JsonSerializer.Deserialize<SendNotificationCommand>(result.Message.Value);
-                if (command != null)
+                try
                 {
-                    await _mediator.Send(command, stoppingToken);
+                    var command = JsonConvert.DeserializeObject<SendNotificationCommand>(result.Message.Value);
+                    if (command != null)
+                    {
+                        await _mediator.Send(command, stoppingToken);
+                    }
+                }
+                catch (JsonException) 
+                {
+                    _logger.LogError("Failed to deserialize message: {Value}", result.Message.Value);
                 }
             }
         }
         catch (OperationCanceledException e)
         {
-            _logger.LogError(e, "Error while consuming notification through Kafka");
+            _logger.LogError(e, "Error while consuming notification");
         }
         finally
         {
