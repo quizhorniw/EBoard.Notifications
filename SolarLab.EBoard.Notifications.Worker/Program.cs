@@ -5,7 +5,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services
     .AddApplication()
-    .AddInfrastructure(builder.Configuration);
+    .AddInfrastructure();
 
 var host = builder.Build();
 
