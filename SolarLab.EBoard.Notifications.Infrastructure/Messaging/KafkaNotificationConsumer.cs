@@ -1,66 +1,20 @@
-using Confluent.Kafka;
+using MassTransit;
 using MediatR;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using SolarLab.EBoard.Notifications.Application.CQRS.Notifications.Send;
 
 namespace SolarLab.EBoard.Notifications.Infrastructure.Messaging;
 
-public class KafkaNotificationConsumer : BackgroundService
+public class KafkaNotificationConsumer : IConsumer<SendNotificationCommand>
 {
-    private readonly ILogger<KafkaNotificationConsumer> _logger;
     private readonly IMediator _mediator;
 
-    public KafkaNotificationConsumer(IMediator mediator, ILogger<KafkaNotificationConsumer> logger)
+    public KafkaNotificationConsumer(IMediator mediator)
     {
         _mediator = mediator;
-        _logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    public async Task Consume(ConsumeContext<SendNotificationCommand> context)
     {
-        var config = new ConsumerConfig
-        {
-            BootstrapServers = Environment.GetEnvironmentVariable("KAFKA_BOOTSTRAP_SERVER"),
-            GroupId = "notifications-group",
-            AutoOffsetReset = AutoOffsetReset.Earliest
-        };
-        
-        using var consumer = new ConsumerBuilder<Ignore, string>(config).Build();
-        consumer.Subscribe("notifications");
-
-        try
-        {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                var result = consumer.Consume(stoppingToken);
-                if (result == null)
-                {
-                    continue;
-                }
-
-                try
-                {
-                    var command = JsonConvert.DeserializeObject<SendNotificationCommand>(result.Message.Value);
-                    if (command != null)
-                    {
-                        await _mediator.Send(command, stoppingToken);
-                    }
-                }
-                catch (JsonException) 
-                {
-                    _logger.LogError("Failed to deserialize message: {Value}", result.Message.Value);
-                }
-            }
-        }
-        catch (OperationCanceledException e)
-        {
-            _logger.LogError(e, "Error while consuming notification");
-        }
-        finally
-        {
-            consumer.Close();
-        }
+        await _mediator.Send(context.Message, context.CancellationToken);
     }
 }

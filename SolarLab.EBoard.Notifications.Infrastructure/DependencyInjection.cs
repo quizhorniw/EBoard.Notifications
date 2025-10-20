@@ -1,5 +1,7 @@
+using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using SolarLab.EBoard.Notifications.Application.Abstractions.Email;
+using SolarLab.EBoard.Notifications.Application.CQRS.Notifications.Send;
 using SolarLab.EBoard.Notifications.Infrastructure.Email;
 using SolarLab.EBoard.Notifications.Infrastructure.Messaging;
 
@@ -22,7 +24,25 @@ public static class DependencyInjection
         
         services.AddSingleton<IEmailSender, EmailSender>();
 
-        services.AddHostedService<KafkaNotificationConsumer>();
+        services.AddMassTransit(config =>
+        {
+            config.UsingInMemory();
+            
+            config.AddRider(rider =>
+            {
+                rider.AddConsumer<KafkaNotificationConsumer>();
+                
+                rider.UsingKafka((context, kafka) =>
+                {
+                    kafka.Host(Environment.GetEnvironmentVariable("KAFKA_BOOTSTRAP_SERVER"));
+                    
+                    kafka.TopicEndpoint<SendNotificationCommand>(
+                        "notifications",
+                        "notifications-group",
+                        ec => ec.ConfigureConsumer<KafkaNotificationConsumer>(context));
+                });
+            });
+        });
         
         return services;
     }
