@@ -22,7 +22,7 @@ public class KafkaNotificationConsumer : BackgroundService
     {
         var config = new ConsumerConfig
         {
-            BootstrapServers = "localhost:9092",
+            BootstrapServers = Environment.GetEnvironmentVariable("KAFKA_BOOTSTRAP_SERVER"),
             GroupId = "notifications-group",
             AutoOffsetReset = AutoOffsetReset.Earliest
         };
